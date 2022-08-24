@@ -5,6 +5,21 @@ class AC(ProcessMemoryControl):
         super().__init__("ac_client")
         self.process_base_addr = super().base_addr()
     
+    def x_pos(self):
+        target_addr = self.process_base_addr + 0x17E090
+        x_pos = super().read_dword(target_addr, "float")
+        return x_pos
+
+    def y_pos(self):
+        target_addr = self.process_base_addr + 0x17E094
+        y_pos = super().read_dword(target_addr, "float")
+        return y_pos
+
+    def z_pos(self):
+        target_addr = self.process_base_addr + 0x17E098
+        z_pos = super().read_dword(target_addr, "float")
+        return z_pos
+
     def undead_on(self):
         nop_code = b'\x90\x90\x90'
         target_addr = self.process_base_addr + 0x1c223

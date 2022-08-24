@@ -1,7 +1,7 @@
 import win32process
 import win32api
 import win32con
-
+import struct
 from tool import addrtool
 
 class ProcessMemoryControl:
@@ -20,24 +20,23 @@ class ProcessMemoryControl:
     def base_addr(self):
         return self.process_base_addr
 
-    def read(self, addr : int, read_bytes : int) -> bytes:
+    def read(self, addr : int, read_bytes : int, types : str = "int") -> int or float:
         read_data : bytes = self.ReadProcessMemory(self.process, addr, read_bytes)
-        return read_data
+        if types == "int":
+            read_data = int.from_bytes(read_data, "little")
+            return read_data
+        elif types == "float":
+            read_data = struct.unpack('f', read_data)
+            return read_data[0]
 
     def read_byte(self, addr : int):
-        read_data = self.read(addr, 1)
-        read_data = int.from_bytes(read_data, "little")
-        return read_data
+        return self.read(addr, 1)
 
     def read_word(self, addr : int):
-        read_data = self.read(addr, 2)
-        read_data = int.from_bytes(read_data, "little")
-        return read_data
+        return self.read(addr, 2)
 
-    def read_dword(self, addr : int):
-        read_data = self.read(addr, 4)
-        read_data = int.from_bytes(read_data, "little")
-        return read_data
+    def read_dword(self, addr : int, types : str = "int"):
+         return self.read(addr, 4, types)
 
     def write(self, addr : int, write_data : bytes) -> bool:
         flag = self.WritePocessMemory(self.process, addr, write_data)
