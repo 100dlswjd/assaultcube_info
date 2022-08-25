@@ -2,13 +2,13 @@ import win32process
 import win32api
 import psutil
 
-def Getpid(process_name : str):
+def getpid(process_name : str):
     for proc in psutil.process_iter():
         if process_name in proc.name():
             return proc.pid
 
 def get_base_addr(process_name : str) -> hex:
-    process_pid = Getpid(process_name)
+    process_pid = getpid(process_name)
     if process_pid == None:
         return None
 
